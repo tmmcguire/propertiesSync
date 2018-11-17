@@ -62,4 +62,20 @@ module.exports = {
     }
   }, 
 
+  mergeProperties: function mergeProperties(target, ...sources) {
+    for (let source of sources) {
+      for (let [key, value] of Object.entries(source)) {
+        if (target.hasOwnProperty(key)) {
+          if (typeof target[key] === 'object' && typeof value === 'object') {
+            mergeProperties(target[key], value);
+          } else {
+            throw 'duplicated key: ' + key;
+          }
+        } else {
+          target[key] = value;
+        }
+      }
+    }
+  }
+
 };
