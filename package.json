@@ -1,0 +1,18 @@
+{
+  "name": "propertiessync",
+  "version": "1.0.0",
+  "description": "Simple, synchronous .properties file reader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "config",
+    "properties",
+    "ini",
+    "config",
+    "sync"
+  ],
+  "author": "Tommy M. McGuire",
+  "license": "GPL-3.0-or-later"
+}
