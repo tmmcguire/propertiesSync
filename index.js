@@ -7,6 +7,12 @@ function getNextFragment(str) {
   if (idx === -1) {
     return [str, ''];
   } else {
+    if (str.charAt(idx) === '\r') {
+     idx += 1;
+    }
+    if (str.charAt(idx) === '\n') {
+      idx += 1;
+    }
     return [str.slice(0, idx), str.slice(idx + 1)];
   }
 }
@@ -60,7 +66,7 @@ module.exports = {
     } else {
       return undefined;
     }
-  }, 
+  },
 
   mergeProperties: function mergeProperties(target, ...sources) {
     for (let source of sources) {
