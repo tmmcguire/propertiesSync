@@ -36,3 +36,5 @@ assert.deepStrictEqual(props, {
   j: 'k.l.m',
   x: 'w',
 });
+
+assert.throws(() => { properties.mergeProperties(props, { e: 'g' }); }, new properties.PropertiesError('duplicated key: e'));

@@ -2,18 +2,33 @@
 
 const fs = require('fs');
 
+/**
+ * Exception thrown by this module.
+ */
+class PropertiesError extends Error {
+  constructor (msg) {
+    super(msg);
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, PropertiesError);
+    }
+    this.name = 'PropertiesError';
+  }
+}
+
 function getNextFragment(str) {
-  let idx = str.search(/\r?\n/);
-  if (idx === -1) {
+  let eol = str.search(/\r?\n/);
+  let bol = eol + 1;
+  if (eol === -1) {
     return [str, ''];
   } else {
-    if (str.charAt(idx) === '\r') {
-     idx += 1;
+    if (str.charAt(bol) === '\r') {
+     bol += 1;
     }
-    if (str.charAt(idx) === '\n') {
-      idx += 1;
+    if (str.charAt(bol) === '\n') {
+      bol += 1;
     }
-    return [str.slice(0, idx), str.slice(idx + 1)];
+    return [str.slice(0, eol), str.slice(bol)];
   }
 }
 
@@ -39,18 +54,19 @@ function recordProperty(dictionary, line) {
     if (!dictionary.hasOwnProperty(elt)) {
       dictionary[elt] = {};
     } else if (typeof dictionary[elt] !== 'object') {
-      throw 'duplicated key: ' + elt;
+      throw new PropertiesError(`duplicated key: ${elements.join('.')}`)
     }
     dictionary = dictionary[elt];
   }
   let element = elements[elements.length - 1].trim();
   if (dictionary.hasOwnProperty(element)) {
-    throw 'duplicated key: ' + element;
+    throw new PropertiesError(`duplicated key: ${elements.join('.')}`)
   }
   dictionary[element] = line.slice(idx + 1).trim();
 }
 
 module.exports = {
+  PropertiesError,
 
   readPropertiesSync: function(path) {
     if (fs.existsSync(path)) {
@@ -75,7 +91,7 @@ module.exports = {
           if (typeof target[key] === 'object' && typeof value === 'object') {
             mergeProperties(target[key], value);
           } else {
-            throw 'duplicated key: ' + key;
+            throw new PropertiesError(`duplicated key: ${key}`)
           }
         } else {
           target[key] = value;
