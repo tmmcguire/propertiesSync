@@ -1,5 +1,5 @@
 {
-  "name": "propertiessync",
+  "name": "properties-sync",
   "version": "1.0.1",
   "description": "Simple, synchronous .properties file reader",
   "main": "index.js",
